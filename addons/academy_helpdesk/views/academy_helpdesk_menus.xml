@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- menu gốc -->
+    <menuitem
+        id="menu_academy_helpdesk_root"
+        name="Helpdesk"
+        sequence="10"/>
+    <!-- menu con: bấm vào chạy action mở danh sách ticket -->
+     <menuitem
+        id="menu_academy_helpdesk_ticket"
+        name="Tickets"
+        action="action_academy_helpdesk_ticket"
+        parent="menu_academy_helpdesk_root"
+        sequence="10"/>
+</odoo>
