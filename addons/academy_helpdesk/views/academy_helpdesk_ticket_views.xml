@@ -17,6 +17,7 @@
                 <field name="name"/>
                 <field name="customer_name"/>
                 <field name="priority"/>
+                <field name="is_urgent"/>
                 <field name="channel"/>
                 <field name="stage_id"/>
                 <field name="date_deadline"/>
@@ -31,12 +32,24 @@
         <field name="model">academy.helpdesk.ticket</field>
         <field name="arch" type="xml">
             <form>
+                <header>
+                    <button name="action_start" type="object" string="Start" 
+                    class="btn-primary"
+                    invisible="stage_code == 'in_progress'"
+                    />
+                    <button name="action_close" type="object" string="Close"
+                    class="btn-primary"
+                    invisible="stage_code == 'done'" />
+                    <field name="stage_id" widget="statusbar" 
+                    options="{'clickable': '1'}"/>
+                </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="name"/>
                             <field name="ticket_ref"/>
                             <field name="priority"/>
+                            <field name="is_urgent"/>
                             <field name="channel"/>
                             <field name="stage_id"/>
                         </group>
@@ -47,6 +60,7 @@
                             <field name="date_deadline"/>
                             <field name="days_open"/>
                             <field name="stage_code"/>
+                            <field name="user_id"/>
                         </group>
                     </group>
                     <notebook>

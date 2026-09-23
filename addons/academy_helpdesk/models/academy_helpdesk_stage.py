@@ -10,6 +10,7 @@ class AcademyHelpdeskStage(models.Model):
     code = fields.Char(string="Code")
     fold = fields.Boolean(string="Folded in Kanban")
 
-    _sql_constraints = [
-        ("unique_stage_code", "unique(code)", "Mã stage (code) phải là duy nhất!"),
-    ]
+    _unique_code = models.Constraint(
+        "unique(code)",
+        "Mã stage (code) phải là duy nhất!",
+    )

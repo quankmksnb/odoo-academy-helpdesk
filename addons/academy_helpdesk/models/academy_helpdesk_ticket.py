@@ -1,5 +1,5 @@
 from odoo import fields, models, api
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 class AcademyHelpdeskTicket(models.Model):
     _name = "academy.helpdesk.ticket"
@@ -29,6 +29,7 @@ class AcademyHelpdeskTicket(models.Model):
     stage_id = fields.Many2one("academy.helpdesk.stage", string="Stage", tracking=True)
     days_open = fields.Integer(string="Days Open", compute="_compute_days_open")
     stage_code = fields.Char(string="Stage Code", related="stage_id.code")
+    user_id = fields.Many2one("res.users", string="Assigned To", tracking=True)
 
     @api.depends("create_date")
     def _compute_days_open(self):
@@ -55,3 +56,24 @@ class AcademyHelpdeskTicket(models.Model):
                 raise ValidationError(
                     "Email khách hàng phải chứa ký tự '@: %s" %ticket.customer_email
                 )
+    
+    @api.onchange("priority")
+    def _onchange_priority(self):
+        for ticket in self:
+            ticket.is_urgent = ticket.priority == '3'
+
+    def action_start(self):
+        self._move_to_stage("in_progress")
+
+    def action_close(self):
+        self._move_to_stage("done")
+
+    def _move_to_stage(self, code):
+        stage = self.env["academy.helpdesk.stage"].search(
+            [("code", "=", code)], limit=1
+        )
+        if not stage:
+            raise UserError(
+                "Chưa có tage nào với code '%s'. Vào Configuration -> Stages để tạo." %code
+            )
+        self.stage_id = stage.id

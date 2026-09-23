@@ -7,6 +7,7 @@
     'license': 'LGPL-3',
     'depends': ['base', 'mail'],
     'data': [
+        'security/helpdesk_security.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
         'data/academy_helpdesk_demo.xml',

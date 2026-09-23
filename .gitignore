@@ -2,3 +2,4 @@
 config/odoo.conf
 config/odoo.local.conf
 docker-compose.yml
+**/__pycache__/
