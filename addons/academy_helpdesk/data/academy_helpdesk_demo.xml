@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- noupdate="1": chỉ tạo 1 lần khi cài/nâng cấp, không ghi đè khi bạn sửa tay -->
+    <!-- noupdate="1": chỉ tạo 1 lần khi nâng cấp-->
     <data noupdate="1">
 
         <!-- ============ STAGES ============ -->
