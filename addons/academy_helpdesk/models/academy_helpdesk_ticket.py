@@ -1,16 +1,18 @@
-from odoo import fields, models
+from odoo import fields, models, api
+from odoo.exceptions import ValidationError
 
 class AcademyHelpdeskTicket(models.Model):
     _name = "academy.helpdesk.ticket"
     _description = "Academy Helpdesk Ticket"
     _order = "create_date desc"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
 
-    name = fields.Char(string="Subject", required=True)
+    name = fields.Char(string="Subject", required=True, tracking=True)
     ticket_ref = fields.Char(string="Ticket ID", readonly=True, copy=False, default="New")
     description = fields.Html(string="Description")
     priority = fields.Selection(
         selection=[("0", "Low"), ("1", "Normal"), ("2", "High"), ("3", "Urgent")],
-        string="Priority", default="1",
+        string="Priority", default="1", tracking=True
     )
     channel = fields.Selection(
         selection=[("email", "Email"), ("phone", "Phone"), ("chat", "Chat")],
@@ -24,3 +26,32 @@ class AcademyHelpdeskTicket(models.Model):
     is_urgent = fields.Boolean(string="Urgent Flag")
     color = fields.Integer(string="Color Index")
     active = fields.Boolean(string="Active", default=True)
+    stage_id = fields.Many2one("academy.helpdesk.stage", string="Stage", tracking=True)
+    days_open = fields.Integer(string="Days Open", compute="_compute_days_open")
+    stage_code = fields.Char(string="Stage Code", related="stage_id.code")
+
+    @api.depends("create_date")
+    def _compute_days_open(self):
+        today = fields.Date.context_today(self)
+        for ticket in self:
+            if ticket.create_date:
+                ticket.days_open = (today - ticket.create_date.date()).days
+            else:
+                ticket.days_open = 0
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get("ticket_ref") or vals["ticket_ref"] == "New":
+                vals["ticket_ref"] = self.env["ir.sequence"].next_by_code(
+                    "academy.helpdesk.ticket"
+                ) or "New"
+        return super().create(vals_list)
+
+    @api.constrains("customer_email")
+    def _check_customer_email(self):
+        for ticket in self:
+            if ticket.customer_email and "@" not in ticket.customer_email:
+                raise ValidationError(
+                    "Email khách hàng phải chứa ký tự '@: %s" %ticket.customer_email
+                )

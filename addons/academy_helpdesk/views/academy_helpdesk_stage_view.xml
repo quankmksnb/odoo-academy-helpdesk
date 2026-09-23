@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_academy_helpdesk_stage" model="ir.actions.act_window">
+        <field name="name">Stage</field>
+        <field name="res_model">academy.helpdesk.stage</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="view_academy_helpdesk_stage_list" model="ir.ui.view">
+        <field name="name">academy.helpdesk.stage.list</field>
+        <field name="model">academy.helpdesk.stage</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="fold"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_academy_helpdesk_stage_form" model="ir.ui.view">
+        <field name="name">academy.helpdesk.stage.form</field>
+        <field name="model">academy.helpdesk.stage</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="sequence"/>
+                        <field name="fold"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

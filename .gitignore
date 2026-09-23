@@ -1,3 +1,4 @@
 # Local Odoo and Docker configuration; these may contain credentials.
 config/odoo.conf
+config/odoo.local.conf
 docker-compose.yml

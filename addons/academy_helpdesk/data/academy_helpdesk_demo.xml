@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- noupdate="1": chỉ tạo 1 lần khi cài/nâng cấp, không ghi đè khi bạn sửa tay -->
+    <data noupdate="1">
+
+        <!-- ============ STAGES ============ -->
+        <record id="stage_new" model="academy.helpdesk.stage">
+            <field name="name">New</field>
+            <field name="code">NEW</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="stage_in_progress" model="academy.helpdesk.stage">
+            <field name="name">In Progress</field>
+            <field name="code">PROG</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="stage_solved" model="academy.helpdesk.stage">
+            <field name="name">Solved</field>
+            <field name="code">SOLVED</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="stage_cancelled" model="academy.helpdesk.stage">
+            <field name="name">Cancelled</field>
+            <field name="code">CANCEL</field>
+            <field name="sequence">40</field>
+            <field name="fold" eval="True"/>
+        </record>
+
+        <!-- ============ TICKETS ============ -->
+        <record id="ticket_login_error" model="academy.helpdesk.ticket">
+            <field name="name">Không đăng nhập được vào hệ thống</field>
+            <field name="description"><![CDATA[<p>Khách báo nhập đúng mật khẩu nhưng vẫn báo sai. Cần kiểm tra lại tài khoản.</p>]]></field>
+            <field name="priority">2</field>
+            <field name="channel">email</field>
+            <field name="customer_name">Trần Thị Mai</field>
+            <field name="customer_email">mai.tran@example.com</field>
+            <field name="customer_phone">0901234567</field>
+            <field name="is_urgent" eval="True"/>
+            <field name="stage_id" ref="stage_new"/>
+            <field name="date_deadline" eval="(datetime.today() + timedelta(days=2))"/>
+        </record>
+
+        <record id="ticket_invoice_wrong" model="academy.helpdesk.ticket">
+            <field name="name">Hóa đơn tính sai số tiền</field>
+            <field name="description"><![CDATA[<p>Hóa đơn tháng này bị cộng dư một khoản. Đề nghị rà soát và xuất lại.</p>]]></field>
+            <field name="priority">1</field>
+            <field name="channel">phone</field>
+            <field name="customer_name">Nguyễn Văn Hùng</field>
+            <field name="customer_email">hung.nguyen@example.com</field>
+            <field name="customer_phone">0912345678</field>
+            <field name="stage_id" ref="stage_in_progress"/>
+            <field name="assigned_date" eval="datetime.now()"/>
+            <field name="date_deadline" eval="(datetime.today() + timedelta(days=5))"/>
+        </record>
+
+        <record id="ticket_slow_app" model="academy.helpdesk.ticket">
+            <field name="name">Ứng dụng chạy chậm vào giờ cao điểm</field>
+            <field name="description"><![CDATA[<p>Từ 9h-10h sáng ứng dụng tải rất chậm. Nhờ kiểm tra hiệu năng server.</p>]]></field>
+            <field name="priority">3</field>
+            <field name="channel">chat</field>
+            <field name="customer_name">Lê Hoàng Anh</field>
+            <field name="customer_email">anh.le@example.com</field>
+            <field name="customer_phone">0987654321</field>
+            <field name="is_urgent" eval="True"/>
+            <field name="color">1</field>
+            <field name="stage_id" ref="stage_in_progress"/>
+            <field name="date_deadline" eval="(datetime.today() + timedelta(days=1))"/>
+        </record>
+
+        <record id="ticket_feature_request" model="academy.helpdesk.ticket">
+            <field name="name">Đề xuất thêm nút xuất Excel</field>
+            <field name="description"><![CDATA[<p>Khách muốn có nút xuất danh sách ra Excel để làm báo cáo.</p>]]></field>
+            <field name="priority">0</field>
+            <field name="channel">email</field>
+            <field name="customer_name">Phạm Thu Hà</field>
+            <field name="customer_email">ha.pham@example.com</field>
+            <field name="stage_id" ref="stage_solved"/>
+        </record>
+
+        <record id="ticket_spam_closed" model="academy.helpdesk.ticket">
+            <field name="name">Email quảng cáo gửi nhầm</field>
+            <field name="description"><![CDATA[<p>Nội dung không liên quan tới hỗ trợ, đã đóng.</p>]]></field>
+            <field name="priority">0</field>
+            <field name="channel">email</field>
+            <field name="customer_name">Khách vãng lai</field>
+            <field name="stage_id" ref="stage_cancelled"/>
+        </record>
+
+    </data>
+</odoo>

@@ -12,4 +12,15 @@
         action="action_academy_helpdesk_ticket"
         parent="menu_academy_helpdesk_root"
         sequence="10"/>
+
+    <menuitem id="menu_academy_helpdesk_config"
+                name="Configuration"
+                parent="menu_academy_helpdesk_root"
+                sequence="90"/>
+    <menuitem
+        id="menu_academy_helpdesk_stage"
+        name="Stage"
+        action="action_academy_helpdesk_stage"
+        parent="menu_academy_helpdesk_config"
+        sequence="10"/>
 </odoo>

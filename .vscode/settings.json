@@ -1,0 +1,9 @@
+{
+    "xml.symbols.enabled": false,
+    "python.languageServer": "None",
+    "python.analysis.extraPaths": [
+        "D:/iDB/odoo-src",
+        "D:/iDB/odoo-src/addons",
+        "D:/iDB/project/addons"
+    ]
+}
