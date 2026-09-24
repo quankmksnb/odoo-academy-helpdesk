@@ -18,6 +18,7 @@ class AcademyHelpdeskTicket(models.Model):
         selection=[("email", "Email"), ("phone", "Phone"), ("chat", "Chat")],
         string="Channel", default="email",
     )
+    partner_id = fields.Many2one("res.partner", string="Customer", tracking=True)
     customer_name = fields.Char(string="Customer Name")
     customer_email = fields.Char(string="Customer Email")
     customer_phone = fields.Char(string="Customer Phone")
@@ -30,6 +31,14 @@ class AcademyHelpdeskTicket(models.Model):
     days_open = fields.Integer(string="Days Open", compute="_compute_days_open")
     stage_code = fields.Char(string="Stage Code", related="stage_id.code")
     user_id = fields.Many2one("res.users", string="Assigned To", tracking=True)
+
+    @api.onchange("partner_id")
+    def _onchange_partner_id(self):
+        for ticker in self:
+            if ticker.partner_id:
+                ticker.customer_name = ticker.partner_id.name
+                ticker.customer_email = ticker.partner_id.email
+                ticker.customer_phone = ticker.partner_id.phone
 
     @api.depends("create_date")
     def _compute_days_open(self):
@@ -47,14 +56,21 @@ class AcademyHelpdeskTicket(models.Model):
                 vals["ticket_ref"] = self.env["ir.sequence"].next_by_code(
                     "academy.helpdesk.ticket"
                 ) or "New"
+            if vals.get("user_id") and not vals.get("assigned_date"):
+                vals["assigned_date"] = fields.Datetime.now()
         return super().create(vals_list)
+    
+    def write(self, vals):
+        if vals.get("user_id"):
+            vals["assigned_date"] = fields.Datetime.now()
+        return super().write(vals)
 
     @api.constrains("customer_email")
     def _check_customer_email(self):
         for ticket in self:
             if ticket.customer_email and "@" not in ticket.customer_email:
                 raise ValidationError(
-                    "Email khách hàng phải chứa ký tự '@: %s" %ticket.customer_email
+                    "Email khách hàng phải chứa ký tự '@': %s" %ticket.customer_email
                 )
     
     @api.onchange("priority")
@@ -80,6 +96,6 @@ class AcademyHelpdeskTicket(models.Model):
         )
         if not stage:
             raise UserError(
-                "Chưa có tage nào với code '%s'. Vào Configuration -> Stages để tạo." %code
+                "Chưa có stage nào với code '%s'. Vào Configuration -> Stages để tạo." %code
             )
         self.stage_id = stage.id

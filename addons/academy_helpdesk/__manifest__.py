@@ -15,6 +15,7 @@
         'views/academy_helpdesk_ticket_views.xml',
         'views/academy_helpdesk_stage_view.xml',
         'views/academy_helpdesk_menus.xml',
+        'views/res_partner_views.xml',
         'wizards/ticket_assign_wizard_views.xml'
         
     ],
