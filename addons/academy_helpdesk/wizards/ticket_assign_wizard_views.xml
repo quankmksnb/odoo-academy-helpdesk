@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ticket_assign_wizard_form" model="ir.ui.view">
+        <field name="name">academy.ticket.assign.wizard.form</field>
+        <field name="model">academy.ticket.assign.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Gán Agent test">
+                <group>
+                    <field name="user_id"/>
+                    <field name="ticket_ids" widget="many2many_tags" readonly="1"/>
+                </group>
+                <footer>
+                    <button name="action_assign" type="object"
+                            string="Gán" class="btn-primary"/>
+                    <button string="Hủy" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ticket_assign_wizard" model="ir.actions.act_window">
+        <field name="name">Gán Agent (hiện action+popup)</field>
+        <field name="res_model">academy.ticket.assign.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_academy_helpdesk_ticket"/>
+        <field name="binding_view_types">list,form</field>
+    </record>
+
+</odoo>

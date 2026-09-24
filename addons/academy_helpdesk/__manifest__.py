@@ -7,13 +7,15 @@
     'license': 'LGPL-3',
     'depends': ['base', 'mail'],
     'data': [
-        'security/helpdesk_security.xml',
+        'security/groups.xml',
+        'security/security_rule.xml',
         'security/ir.model.access.csv',
         'data/ir_sequence_data.xml',
         'data/academy_helpdesk_demo.xml',
         'views/academy_helpdesk_ticket_views.xml',
         'views/academy_helpdesk_stage_view.xml',
         'views/academy_helpdesk_menus.xml',
+        'wizards/ticket_assign_wizard_views.xml'
         
     ],
     'application': True,

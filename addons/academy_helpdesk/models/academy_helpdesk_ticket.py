@@ -65,8 +65,14 @@ class AcademyHelpdeskTicket(models.Model):
     def action_start(self):
         self._move_to_stage("in_progress")
 
+    def action_wait(self):
+        self._move_to_stage("waiting")
+
+    def action_customer_reply(self):
+        self._move_to_stage("in_progress")
+
     def action_close(self):
-        self._move_to_stage("done")
+        self._move_to_stage("closed")
 
     def _move_to_stage(self, code):
         stage = self.env["academy.helpdesk.stage"].search(

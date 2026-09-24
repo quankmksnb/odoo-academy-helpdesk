@@ -3,3 +3,4 @@ access_ticket_user,academy.helpdesk.ticket.user,model_academy_helpdesk_ticket,ac
 access_ticket_manager,academy.helpdesk.ticket.manager,model_academy_helpdesk_ticket,academy_helpdesk.group_helpdesk_manager,1,1,1,1
 access_stage_user,academy.helpdesk.stage.user,model_academy_helpdesk_stage,academy_helpdesk.group_helpdesk_user,1,0,0,0
 access_stage_manager,academy.helpdesk.stage.manager,model_academy_helpdesk_stage,academy_helpdesk.group_helpdesk_manager,1,1,1,1
+access_assign_wizard_user,academy.ticket.assign.wizard.user,model_academy_ticket_assign_wizard,academy_helpdesk.group_helpdesk_user,1,1,1,0

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="module_category_academy_helpdesk" model="ir.module.category">
+   <record id="module_category_academy_helpdesk" model="ir.module.category">
         <field name="name">Academy Helpdesk</field>
         <field name="sequence">20</field>
     </record>
@@ -28,21 +28,4 @@
         <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
       </record>
 
-      <!-- RECORD RULE: user chỉ thấy ticket của mình hoặc chưa gán -->
-       <record id="rule_ticket_user_own" model="ir.rule">
-            <field name="name">Helpdesk User: own or unassigned tickets</field>
-            <field name="model_id" ref="model_academy_helpdesk_ticket"/>
-            <field name="domain_force">
-            ['|', ('user_id', '=', user.id), ('user_id', '=', False)]
-            </field>
-            <field name="groups" eval="[(4, ref('group_helpdesk_user'))]"/>
-       </record>
-
-       <!-- Manager thấy full -->
-        <record id="rule_ticket_manager_all" model="ir.rule">
-            <field name="name">Helpdesk Manager: all tickets</field>
-            <field name="model_id" ref="model_academy_helpdesk_ticket"/>
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field name="groups" eval="[(4, ref('group_helpdesk_manager'))]"/>
-        </record>
 </odoo>

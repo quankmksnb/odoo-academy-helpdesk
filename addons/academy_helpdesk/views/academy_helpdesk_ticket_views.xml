@@ -33,13 +33,14 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_start" type="object" string="Start" 
-                    class="btn-primary"
-                    invisible="stage_code == 'in_progress'"
-                    />
-                    <button name="action_close" type="object" string="Close"
-                    class="btn-primary"
-                    invisible="stage_code == 'done'" />
+                    <button name="action_start" type="object" string="Agent nhận"
+                    class="btn-primary" invisible="stage_code != 'new'"/>
+                    <button name="action_wait" type="object" string="Chờ phản hồi"
+                    invisible="stage_code != 'in_progress'"/>
+                    <button name="action_customer_reply" type="object" string="KH phản hồi"
+                    class="btn-primary" invisible="stage_code != 'waiting'"/>
+                    <button name="action_close" type="object" string="Hoàn tất"
+                    class="btn-primary" invisible="stage_code != 'in_progress'"/>
                     <field name="stage_id" widget="statusbar" 
                     options="{'clickable': '1'}"/>
                 </header>
