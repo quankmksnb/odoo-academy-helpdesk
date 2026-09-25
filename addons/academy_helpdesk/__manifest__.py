@@ -17,7 +17,6 @@
         'views/academy_helpdesk_menus.xml',
         'views/res_partner_views.xml',
         'wizards/ticket_assign_wizard_views.xml'
-        
     ],
     'application': True,
     'installable': True

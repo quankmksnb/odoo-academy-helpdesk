@@ -42,8 +42,8 @@
                     class="btn-primary" invisible="stage_code != 'waiting'"/>
                     <button name="action_close" type="object" string="Hoàn tất"
                     class="btn-primary" invisible="stage_code != 'in_progress'"/>
-                    <field name="stage_id" widget="statusbar" 
-                    options="{'clickable': '1'}"/>
+                    <field name="stage_id" widget="statusbar"
+                    options="{'clickable': '0'}"/>
                 </header>
                 <sheet>
                     <group>
@@ -53,7 +53,6 @@
                             <field name="priority"/>
                             <field name="is_urgent"/>
                             <field name="channel"/>
-                            <field name="stage_id"/>
                         </group>
                         <group>
                             <field name="partner_id"/>
@@ -65,6 +64,7 @@
                             <field name="stage_code" invisible="1"/>
                             <field name="user_id"/>
                             <field name="assigned_date" readonly="1"/>
+                            <field name="date_closed" readonly="1"/>
                         </group>
                     </group>
                     <notebook>

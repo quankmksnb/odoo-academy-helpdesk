@@ -24,10 +24,17 @@ class AcademyHelpdeskTicket(models.Model):
     customer_phone = fields.Char(string="Customer Phone")
     date_deadline = fields.Date(string="Deadline")
     assigned_date = fields.Datetime(string="Assigned Date")
-    is_urgent = fields.Boolean(string="Urgent Flag")
+    date_closed = fields.Datetime(string="Closed Date", readonly=True)
+    is_urgent = fields.Boolean(
+        string="Urgent Flag", compute="_compute_is_urgent", store=True
+    )
     color = fields.Integer(string="Color Index")
     active = fields.Boolean(string="Active", default=True)
-    stage_id = fields.Many2one("academy.helpdesk.stage", string="Stage", tracking=True)
+    stage_id = fields.Many2one("academy.helpdesk.stage", string="Stage", tracking=True,
+    default=lambda self: self.env["academy.helpdesk.stage"].search(
+            [("code", "=", "new")], limit=1
+        ),
+    )
     days_open = fields.Integer(string="Days Open", compute="_compute_days_open")
     stage_code = fields.Char(string="Stage Code", related="stage_id.code")
     user_id = fields.Many2one("res.users", string="Assigned To", tracking=True)
@@ -40,14 +47,20 @@ class AcademyHelpdeskTicket(models.Model):
                 ticker.customer_email = ticker.partner_id.email
                 ticker.customer_phone = ticker.partner_id.phone
 
-    @api.depends("create_date")
+    @api.depends("create_date", "date_closed")
     def _compute_days_open(self):
         today = fields.Date.context_today(self)
         for ticket in self:
-            if ticket.create_date:
-                ticket.days_open = (today - ticket.create_date.date()).days
-            else:
+            if not ticket.create_date:
                 ticket.days_open = 0
+                continue
+            end = ticket.date_closed.date() if ticket.date_closed else today
+            ticket.days_open = (end - ticket.create_date.date()).days
+
+    @api.depends("priority")
+    def _compute_is_urgent(self):
+        for ticket in self:
+            ticket.is_urgent = ticket.priority == "3"
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -58,11 +71,18 @@ class AcademyHelpdeskTicket(models.Model):
                 ) or "New"
             if vals.get("user_id") and not vals.get("assigned_date"):
                 vals["assigned_date"] = fields.Datetime.now()
+            if vals.get("stage_id"):
+                stage = self.env["academy.helpdesk.stage"].browse(vals["stage_id"])
+                if stage.code == "closed" and not vals.get("date_closed"):
+                    vals["date_closed"] = fields.Datetime.now()
         return super().create(vals_list)
-    
+
     def write(self, vals):
         if vals.get("user_id"):
             vals["assigned_date"] = fields.Datetime.now()
+        if vals.get("stage_id"):
+            stage = self.env["academy.helpdesk.stage"].browse(vals["stage_id"])
+            vals["date_closed"] = fields.Datetime.now() if stage.code == "closed" else False
         return super().write(vals)
 
     @api.constrains("customer_email")
@@ -73,11 +93,6 @@ class AcademyHelpdeskTicket(models.Model):
                     "Email khách hàng phải chứa ký tự '@': %s" %ticket.customer_email
                 )
     
-    @api.onchange("priority")
-    def _onchange_priority(self):
-        for ticket in self:
-            ticket.is_urgent = ticket.priority == '3'
-
     def action_start(self):
         self._move_to_stage("in_progress")
 
